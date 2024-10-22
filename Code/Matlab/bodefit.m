@@ -2,7 +2,7 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = 'dataBode009';
+filename = 'dataBode002';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
@@ -36,31 +36,62 @@ if flagLimited
 end
 
 % setting of fit parameters and function
-Ra = 3.2822e3;
-Rb = 1490.3;
-b = Rb / (Ra+Rb);
-G = 100;
+b = 1;
 
-%G0 = 100;
-G0 = G * b;
-f0 = 4e5;
-tau0 = 1/(2*pi*f0);
-p0tf = [G0, tau0];
+R = 330; 
+R2 = 100;
+L = 0.1;
+
+%tau0 = L/R;
+
+p0tf = [R, R2, L];
+
 
 function y = tf(params, f)
     
     w = 2 * pi * f;
-    G = params(1) ./ ( 1 +  w .* 1i * params(2) );
+    %tau0 = params(3)/params(2);
+
+    G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
+    %G = ( 1 + 1i * w * tau0 ) ./ ( 1 + params(1)/params(2) +  w * 1i * tau0 );
     y = abs(G);
 end
 
 function y = tp(params, f)
     
     w = 2 * pi * f;
+    %tau0 = params(3)/params(2);
 
-    G = params(1) ./ ( 1 +  w .* 1i * params(2) );
+    G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
+    %G = ( 1 + 1i * w * tau0 ) ./ ( 1 + params(1)/params(2) +  w * 1i * tau0 );
     y = angle(G);
 end
+
+
+%{
+function y = tf(params, f)
+    
+    w = 2 * pi * f;
+    %tau0 = params(3)/params(2);
+
+    G = ( 1 + 1i * w * params(3) ) ./ ( 1 + params(1)/params(2) +  w * 1i * params(3) );
+    y = abs(G);
+end
+
+function y = tp(params, f)
+    
+    w = 2 * pi * f;
+    tau0 = params(3)/params(2);
+
+    G = ( 1 + 1i * w * tau0 ) ./ ( 1 + params(1)/params(2) +  w * 1i * tau0 );
+    y = angle(G);
+end
+%}
+
+
+
+
+
 
 
 
@@ -132,13 +163,13 @@ yticks(ax2, [-pi, -0.75*pi, -pi/2, -pi/4, 0, pi/4, pi/2, 0.75*pi, pi])
 yticklabels(ax2, {'-pi', '-3/4\pi', '-\pi/2', '-\pi/4', '0', '\pi/4', '\pi/2', '3/4\pi', '\pi'})
 
 dim = [.08 .55 .3 .3];
-str = strcat('G_{\omega \rightarrow 0} = ', sprintf('%.2f', beta(1)/b ) );
+str = strcat('R = ', sprintf('%.3f', beta(1) ), '\pm', sprintf('%.3f', sqrt(covbeta(1, 1)) ),  '\Omega' );
 annotation('textbox',dim,'String',str,'FitBoxToText','on', 'Interpreter', 'tex', 'BackgroundColor', 'white');
 dim = [.08 .5 .3 .3];
-str = sprintf('f_c = %.2e Hz', 1/(2*pi*beta(2) ) ) ;
+str = strcat('R2 = ', sprintf('%.3f', beta(2) ), '\pm', sprintf('%.3f', sqrt(covbeta(2, 2)) ),  '\Omega' );
 annotation('textbox',dim,'String',str,'FitBoxToText','on', 'Interpreter', 'tex', 'BackgroundColor', 'white');
 dim = [.08 .45 .3 .3];
-str = sprintf('GBWP = %.2e', 1/(2*pi*beta(2)) * beta(1)/b  ) ;
+str = strcat('L = ', sprintf('%.3f', beta(3) ), '\pm', sprintf('%.3f', sqrt(covbeta(3, 3)) ),  '\Omega' );
 annotation('textbox',dim,'String',str,'FitBoxToText','on', 'Interpreter', 'tex', 'BackgroundColor', 'white');
 
 
