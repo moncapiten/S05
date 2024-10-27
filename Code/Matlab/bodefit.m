@@ -2,7 +2,7 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = 'dataBode004';
+filename = 'dataBode005';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
@@ -12,7 +12,7 @@ medianame = strcat('bodePlotAndFitLM7412-', filename);
 flagSave = false;
 flagdB = false;
 flagDeg = false;
-flagLimited = true;
+flagLimited = false;
 limit = 60;
 
 % data import and conditioning

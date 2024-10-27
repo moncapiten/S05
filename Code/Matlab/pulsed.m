@@ -1,6 +1,6 @@
 clear all;
 
-filename = 'data001';
+filename = ['data001'];
 dataposition = '../../Data/';
 
 % importing data and manipulation to obtain transfer function
@@ -9,7 +9,7 @@ rawdata = readmatrix(strcat(dataposition, filename, '.txt'));
 
 
 flagSave = false;
-confPlot = 3;
+confPlot = 2;
 flagp0 = true;
 thr = 1;
 
@@ -20,7 +20,7 @@ vo = rawdata(:, 3);
 
 if(confPlot > 1)
     dt = mean( diff( tt));
-    fs = 1/dt;
+    fs = 1/dt
     N = length(tt);
     
     Hv = fft(vo)./fft(vi);
@@ -118,7 +118,7 @@ end
 
 if ~(confPlot == 2)
     if confPlot == 3
-        ax2 = nexttile
+        ax2 = nexttile;
     end
     plot(tt, vi, 'o', Color= '#0027bd');
     hold on
