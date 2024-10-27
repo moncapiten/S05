@@ -2,18 +2,18 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = 'dataBode004';
+filename = 'simulationHPF';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
-medianame = strcat('bodePlotAndFitLM741NoR2-', filename);
+medianame = strcat('simulationHPFnoR2-', filename);
 
 % flags, change the working code to condition the data differently based on necessity
 flagSave = false;
 flagdB = false;
 flagDeg = false;
 flagR2 = false;
-flagLimited = true;
+flagLimited = false;
 limit = 60;
 
 % data import and conditioning
