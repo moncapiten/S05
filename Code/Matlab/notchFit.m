@@ -2,14 +2,14 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = ['dataBode025'];
+filename = ['simulationNotch'];
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
-medianame = strcat('notch-OP77-3');
+medianame = strcat('notch-simulation');
 
 % flags, change the working code to condition the data differently based on necessity
-flagSave = true;
+flagSave = false;
 flagdB = false;
 flagDeg = false;
 flagLimited = false;
@@ -20,7 +20,7 @@ rawData = readmatrix(strcat(dataPosition, filename, '.txt'));
 
 ff = rawData(:, 1);
 A = rawData(:, 2);
-ph = rawData(:, 8);
+ph = rawData(:, 3);
 
 
 if flagdB

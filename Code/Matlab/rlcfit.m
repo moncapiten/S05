@@ -2,16 +2,16 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = ['dataBode022'];
+filename = ['simulationRLCQx2'];
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
-medianame = strcat('bodeRLC-OP77-Qx4');
+medianame = strcat('bodeRLC-simulation-Qx2');
 
 % flags, change the working code to condition the data differently based on necessity
-flagSave = true;
-flagdB = false;
-flagDeg = false;
+flagSave = false;
+flagdB = true;
+flagDeg = true;
 flagLimited = false;
 limit = 60;
 
