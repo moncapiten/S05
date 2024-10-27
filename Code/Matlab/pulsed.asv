@@ -1,0 +1,102 @@
+clear all;
+
+filename = 'data001';
+dataposition = '../../Data/';
+
+% importing data and manipulation to obtain transfer function
+rawdata = readmatrix(strcat(dataposition, filename, '.txt'));
+
+
+
+flagSave = false;
+confPlot = 1;
+thr = 0.7;
+
+
+tt = rawdata(:, 1);
+vi = rawdata(:, 2);
+vo = rawdata(:, 3);
+
+if(confPlot > 1)
+    dt = mean( diff( tt));
+    fs = 1/dt;
+    N = length(tt);
+    
+    Hv = fft(vo)./fft(vi);
+    Hv = Hv(1:N/2+1);
+    fv = (0:N/2)*fs/N;
+    
+    
+    % removing data overly contaminated by noise
+    Hv(abs(fft(vo))<thr)=NaN;
+    fv(abs(fft(vo))<thr)=NaN;
+end
+
+% flag to see original signals transform, in case useful
+
+
+%{************************************************************************************************************************
+yi = fftshift( fft(vi) );
+yi = yi(N/2, end);
+yo = fftshift( fft(vo) );
+yo = yo(N/2, end);
+
+
+% plots
+
+if ~plotPulsed
+    plot(fv, abs(yi), 'o', Color= 'Blue');
+    hold on
+    %plot(fv, abs(yo), 'v', Color= 'Red');
+    grid on
+    grid minor
+    hold off
+
+end
+****************************************************************************************************************************%}
+
+
+if confPlot == 1
+    plot(tt, vi, 'o', Color= '#0027bd');
+    hold on
+    plot(tt, vo, 'v', Color= 'red');
+    grid on
+    grid minor
+    title(strcat('Simple data plot - ', filename))
+    ylabel('Voltage [V]');
+    xlabel('Frequency [Hz]');
+
+    hold off
+
+
+
+
+end
+
+
+
+
+
+if confPlot == 2
+    loglog(fv, abs(Hv), 'o');
+    hold on
+    grid on
+    grid minor
+    title('Fourier transform of pulsed measurement');
+    ylabel('Amplitude [pure]');
+    xlabel('Frequency [Hz]');
+    ylim([0.05, 2]);
+    dim = [.15 .6 .3 .3];
+    str = ['Threshold = ' sprintf('%.2f', thr) ];
+    annotation('textbox',dim,'String',str,'FitBoxToText','on');
+    hold off
+
+end
+
+
+% saving only if flag set
+if flagSave
+    fig = gcf;
+    orient(fig, 'landscape')
+    print(fig, strcat(mediaposition, medianame, '.pdf'), '-dpdf')
+end

@@ -2,18 +2,17 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = 'dataBode004';
+filename = 'data001';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
-medianame = strcat('bodePlotAndFitLM7412-', filename);
+medianame = strcat('pulsedOP77-', filename);
 
 % flags, change the working code to condition the data differently based on necessity
 flagSave = false;
-flagdB = false;
-flagDeg = false;
 flagLimited = true;
 limit = 60;
+thr = 0.6;
 
 % data import and conditioning
 rawData = readmatrix(strcat(dataPosition, filename, '.txt'));
@@ -23,12 +22,6 @@ A = rawData(:, 2);
 ph = rawData(:, 8);
 
 
-if flagdB
-    A = 10.^(A/20);
-end
-if flagDeg
-    ph = ph.*pi/180;
-end
 if flagLimited
     A2 = A(1 : limit);
     f2 = ff(1 : limit);
