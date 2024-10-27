@@ -56,8 +56,6 @@ p0tf = [tau1, tau2, tau3];
 function y = H(params, w)
 
     R2 = 99.9;
-%    y  = ( 1i * w * params(3) - w.^2 * params(2) ) ./ ( 1/params(1) + 1i*w*params(3) - w.^2 * params(2));
-%    y  = ( 1i * w * R2 - w.^2 * params(2) ) ./ ( 1/params(1) + 1i*w*R2 - w.^2 * params(2));
     y = (1 + 1i*w*params(2) - w.^2*params(3)) ./ ( 1 + 1i*w*params(1) + 1i*w*params(2) - w.^2*params(3));
 
 end

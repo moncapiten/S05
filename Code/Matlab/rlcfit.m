@@ -47,28 +47,6 @@ L = 0.1;
 
 p0tf = [C, L];
 
-%{
-function y = tf(params, f)
-    
-    w = 2 * pi * f;
-    %tau0 = params(3)/params(2);
-
-    G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
-    %G = ( 1 + 1i * w * tau0 ) ./ ( 1 + params(1)/params(2) +  w * 1i * tau0 );
-    y = abs(G);
-end
-
-function y = tp(params, f)
-    
-    w = 2 * pi * f;
-    %tau0 = params(3)/params(2);
-
-    G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
-    %G = ( 1 + 1i * w * tau0 ) ./ ( 1 + params(1)/params(2) +  w * 1i * tau0 );
-    y = angle(G);
-end
-%}
-
 
 function y = H(params, w)
 
