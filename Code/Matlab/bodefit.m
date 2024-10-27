@@ -6,14 +6,14 @@ filename = 'dataBode004';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
-medianame = strcat('bodePlotAndFitLM741-', filename);
+medianame = strcat('bodePlotAndFitLM741NoR2-', filename);
 
 % flags, change the working code to condition the data differently based on necessity
-flagSave = true;
+flagSave = false;
 flagdB = false;
 flagDeg = false;
-flagLimited = true;
 flagR2 = false;
+flagLimited = true;
 limit = 60;
 
 % data import and conditioning
