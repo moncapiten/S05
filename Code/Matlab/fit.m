@@ -1,13 +1,13 @@
 clear all;
 
 dataPosition = '../../Data/';
-filename = 'dataSchmitt001';
+filename = 'data001';
 
 mediaposition = '../../Media/';
 medianame = strcat('plot', filename);
 
-flagSave = true;
-flagFit = true;
+flagSave = false;
+flagFit = false;
 % data import and creation of variance array
 rawData = readmatrix(strcat(dataPosition, filename, '.txt'));
 
@@ -20,15 +20,23 @@ s_o = repelem(5.3e-2, length(tt));
 % preparation of fitting function and p0 parameters
 function y = funcSine(params, t)
     w = 2 * pi * params(2);
-    y = params(1) .* sin( w*t + params(3)) ;%+ params(4);
+    y = params(1) .* sign( sin( w*t + params(3)) );%+ params(4);
 end
-
 
 
 function y = funcSquare(params, t)
-    w = 2 * pi .* params(2);
-    y = params(1) .* sign( sin( w*t + params(3) ) ) ;%+ params(4);
+    w = 2*pi*params(2);
+    % t: time vector
+    % duty: duty cycle in percentage (0 to 100)
+    % freq: frequency of the square wave
+    % amplitude: peak amplitude of the wave
+    
+    y = params(1) * (square( w * t + params(3), 0.01) );
 end
+%function y = funcSquare(params, t)
+%    w = 2 * pi .* params(2);
+%    y = params(1) .* sign( sin( w*t + params(3) ) ) ;%+ params(4);
+%end
 
 R1 = 997.1;
 R2 = 100200;
@@ -38,12 +46,12 @@ Ra = 3282.2;
 Rb = 1490.3;
 A = Rb/(Ra+Rb);
 
-f0 = 1e3;
+f0 = 1;
 %ai = A*0.1;
-ai = 2.5;
+ai = 2;
 %ao = G * ai;
 ao = 5;
-ph0i = pi*1/4;
+ph0i = 0;
 ph0o = pi*13/16;
 oi = 0;
 oo = G * oi;
@@ -53,23 +61,29 @@ p0i = [ ai, f0, ph0i, oi];
 p0o = [ ao, f0, ph0o, oo];
 
 
-% fit and k^2 calculation
-[betai, Ri, ~, covbetai] = nlinfit(tt, vi, @funcSine, p0i);
-%[betao, Ro, ~, covbetao] = nlinfit(tt, vo, @funcSine, p0o);
-[betao, Ro, ~, covbetao] = nlinfit(tt, vo, @funcSquare, p0o);
 
-vo1 = [];
-tt1 = [];
-for i = 1:length(Ro)
-    if abs(Ro(i)) < 0.7
-        vo1 = [vo1, vo(i)];
-        tt1 = [tt1, tt(i)];
-    end
-end
+
+
+
+
+
+% fit and k^2 calculation
+[betai, Ri, ~, covbetai] = nlinfit(tt, vi, @funcSquare, p0i);
+%[betao, Ro, ~, covbetao] = nlinfit(tt, vo, @funcSine, p0o);
+[betao, Ro, ~, covbetao] = nlinfit(tt, vo, @funcSine, p0o);
+
+%vo1 = [];
+%tt1 = [];
+%for i = 1:length(Ro)
+%    if abs(Ro(i)) < 0.7
+%        vo1 = [vo1, vo(i)];
+%        tt1 = [tt1, tt(i)];
+%    end
+%end
 
 %length(vo) - length(vo1)
 
-[betao, Ro1, ~, covbetao] = nlinfit(tt1, vo1, @funcSquare, betao);
+%[betao, Ro1, ~, covbetao] = nlinfit(tt1, vo1, @funcSquare, betao);
 
 
 
@@ -80,15 +94,15 @@ for i = 1:length(Ri)
 end
 ki = ki/(length(tt)-4);
 
-ko = 0;
-for i = 1:length(Ro1)
-    ko = ko + Ro1(i)^2/s_o(i)^2;
-end
-ko = ko/(length(tt)-4);
+%ko = 0;
+%for i = 1:length(Ro1)
+%    ko = ko + Ro1(i)^2/s_o(i)^2;
+%end
+%ko = ko/(length(tt)-4);
 
 
-ki
-ko
+%ki
+%ko
 
 if flagFit
     % plot seffing and execution
@@ -102,14 +116,14 @@ if flagFit
     errorbar(tt, vi, s_i, 'o', Color= "#0027BD");
     hold on
     errorbar(tt, vo, s_o, 'v', Color= "Red");
-    errorbar(tt1, vo1, s_o(1:length(vo1)), 'v', Color= 'Green');
+%    errorbar(tt1, vo1, s_o(1:length(vo1)), 'v', Color= 'Green');
     %plot(tt, vo, 'o', Color="Red");
     
-    plot(tt, funcSine(p0i, tt), '--', Color = 'cyan');
+    plot(tt, funcSquare(p0i, tt), '--', Color = 'cyan');
     %plot(tt, funcSine(p0o, tt), '--', Color = '#FFa500');
     plot(tt, funcSquare(p0o, tt), '--', Color = '#FFa500');
     
-    plot(tt, funcSine(betai, tt), '-', Color = '#0047AB');
+    plot(tt, funcSquare(betai, tt), '-', Color = '#0047AB');
     %plot(tt, funcSine(betao, tt), '-', Color = 'Magenta');
     plot(tt, funcSquare(betao, tt), '-', Color = 'Magenta');
 
@@ -138,7 +152,7 @@ if flagFit
     %errorbar(Ri, s_i, 'o', Color= '#0027BD');
     %plot(tt, Ri, 'o', Color= '#0072BD');
     errorbar(tt, Ro, s_o, 'v', Color= 'Red');
-    errorbar(tt1, Ro1, s_o(1:length(Ro1)), 'v', Color= 'green');
+ %   errorbar(tt1, Ro1, s_o(1:length(Ro1)), 'v', Color= 'green');
     %set(gca, 'XScale','log', 'YScale','lin')
     hold off
     grid on

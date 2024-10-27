@@ -1,16 +1,19 @@
 clear all;
 
-filename = ['data001'];
+filename = ['data004'];
 dataposition = '../../Data/';
+
+mediaposition = '../../Media/Notch/'
+medianame = strcat("PulsedOP77-", filename);
 
 % importing data and manipulation to obtain transfer function
 rawdata = readmatrix(strcat(dataposition, filename, '.txt'));
 
 
 
-flagSave = false;
-confPlot = 2;
-flagp0 = true;
+flagSave = true;
+confPlot = 3;
+flagp0 = false;
 thr = 1;
 
 
@@ -60,23 +63,37 @@ end
 
 
 
-R = 325;
-R2 = 97;
-L = 0.104;
-p0tf = [R, R2, L];
+%R = 325;
+%R2 = 97;
+%L = 0.104;
+%p0tf = [R, R2, L];
 
 
-function y = tf(params, f)
-    
+R = 330; 
+R2 = 100;
+C = 110e-9;
+L = 0.1;
+
+p0tf = [C, L];
+
+
+
+
+
+function y = H(params, f)
     w = 2 * pi * f;
-    %tau0 = params(3)/params(2);
-
-    G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
-    %G = ( 1 + 1i * w * tau0 ) ./ ( 1 + params(1)/params(2) +  w * 1i * tau0 );
-    y = abs(G);
+    
+    %G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
+    R2 = 99.9;
+    y  = ( 1i * w * R2 - w.^2 * params(2) ) ./ ( 1/params(1) + 1i*w*R2 - w.^2 * params(2));
 end
 
+function y = tf(params, f)
+    w = 2 * pi * f;
 
+    y = abs(H(params, w));
+
+end
 
 
 
@@ -108,8 +125,8 @@ if confPlot >=2
     title(strcat('Fourier transform of pulsed measurement ', filename));
     ylabel('Amplitude [pure]');
     xlabel('Frequency [Hz]');
-    ylim([0.05, 2]);
-    dim = [.15 .6 .3 .3];
+    %ylim([0.05, 2]);
+    dim = [.15 .55 .3 .3];
     str = ['Threshold = ' sprintf('%.2f', thr) ];
     annotation('textbox',dim,'String',str,'FitBoxToText','on');
     hold off
