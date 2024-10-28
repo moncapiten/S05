@@ -2,7 +2,7 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = 'simulationHPF';
+filename = 'dataSimulationHPF';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
@@ -10,18 +10,18 @@ medianame = strcat('simulationHPFnoR2-', filename);
 
 % flags, change the working code to condition the data differently based on necessity
 flagSave = false;
-flagdB = false;
-flagDeg = false;
+flagdB = true;
+flagDeg = true;
 flagR2 = false;
-flagLimited = false;
-limit = 60;
+flagLimited = true;
+limit = 70;
 
 % data import and conditioning
 rawData = readmatrix(strcat(dataPosition, filename, '.txt'));
 
 ff = rawData(:, 1);
 A = rawData(:, 2);
-ph = rawData(:, 8);
+ph = rawData(:, 3);
 
 
 if flagdB
