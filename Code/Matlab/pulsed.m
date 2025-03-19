@@ -1,22 +1,19 @@
 clear all;
 
-filename = 2;
-dataposition = '../../Data/data00';
+filename = ['data004'];
+dataposition = '../../Data/';
 
-OpAmp = [ "OP77", "AD8031", "LM741" ];
-
-mediaposition = '../../Media/HPF/';
-medianame = strcat("PulsedOP77-", string(filename));
+mediaposition = '../../Media/Notch/'
+medianame = strcat("PulsedOP77-", filename);
 
 % importing data and manipulation to obtain transfer function
-rawdata = readmatrix(strcat(dataposition, string(filename), '.txt'));
+rawdata = readmatrix(strcat(dataposition, filename, '.txt'));
 
 
 
-flagSave = false;
+flagSave = true;
 confPlot = 3;
-flagp0 = true;
-HPF = true;
+flagp0 = false;
 thr = 1;
 
 
@@ -77,7 +74,7 @@ R2 = 100;
 C = 110e-9;
 L = 0.1;
 
-p0tf = [R, L];
+p0tf = [C, L];
 
 
 
@@ -85,12 +82,10 @@ p0tf = [R, L];
 
 function y = H(params, f)
     w = 2 * pi * f;
-
-    R2 = 97;
-%    G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
-%   first function is HPF, second is notch
-        y = (R2 + 1i * w * params(2)) ./ ( params(1) + R2 + 1i * w * params(2) );
-%        y  = ( 1i * w * R2 - w.^2 * params(2) ) ./ ( 1/params(1) + 1i*w*R2 - w.^2 * params(2));
+    
+    %G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
+    R2 = 99.9;
+    y  = ( 1i * w * R2 - w.^2 * params(2) ) ./ ( 1/params(1) + 1i*w*R2 - w.^2 * params(2));
 end
 
 function y = tf(params, f)
@@ -108,7 +103,7 @@ end
 
 if confPlot == 3
     t = tiledlayout(2, 1, "TileSpacing","tight", "Padding","tight");
-    title(t, strcat('Compound fit - '), OpAmp(filename));
+    title(t, strcat('Compound fit - '), filename);
 
 
 end
@@ -130,7 +125,7 @@ if confPlot >=2
     title(strcat('Fourier transform of pulsed measurement ', filename));
     ylabel('Amplitude [pure]');
     xlabel('Frequency [Hz]');
-    ylim([0.05, 2]);
+    %ylim([0.05, 2]);
     dim = [.15 .55 .3 .3];
     str = ['Threshold = ' sprintf('%.2f', thr) ];
     annotation('textbox',dim,'String',str,'FitBoxToText','on');
@@ -149,7 +144,7 @@ if ~(confPlot == 2)
     grid minor
     title(strcat('Simple data plot - ', filename))
     ylabel('Voltage [V]');
-    xlabel('Time [s]');
+    xlabel('Frequency [Hz]');
 
     hold off
 
