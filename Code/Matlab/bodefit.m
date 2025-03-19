@@ -2,7 +2,7 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = 'dataSimulationHPF';
+filename = 'dataBode001';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
@@ -10,8 +10,8 @@ medianame = strcat('simulationHPFnoR2-', filename);
 
 % flags, change the working code to condition the data differently based on necessity
 flagSave = false;
-flagdB = true;
-flagDeg = true;
+flagdB = false;
+flagDeg = false;
 flagR2 = false;
 flagLimited = true;
 limit = 70;
