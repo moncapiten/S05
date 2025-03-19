@@ -2,7 +2,7 @@ clear all;
 
 % Data( media) position and name, to retrieve( save) files from( to) the correct position
 dataPosition = '../../Data/';
-filename = 'dataSimulationHPF';
+filename = 'dataDin1';
 %filename = 'AD8031';
 
 mediaposition = '../../Media/';
@@ -39,9 +39,17 @@ end
 % setting of fit parameters and function
 %b = 1;
 
+%vecchi parametri misure fatte in lab
 R = 330; 
 R2 = 100;
 L = 0.1;
+
+%nuovi parametri nuovi dati
+%R = 219.45
+%R2 = 100;
+%L = 0.37;
+% C verde = 22.34nF
+
 
 %tau0 = L/R;
 if flagR2

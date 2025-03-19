@@ -1,5 +1,5 @@
 dataPosition = '../../Data/';
-filename = 'dataBode002';
+filename = 'dataDin1';
 %filename2 = 'dataBode003';
 
 mediaposition = '../../Media/';
