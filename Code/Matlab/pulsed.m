@@ -1,19 +1,20 @@
 clear all;
 
-filename = ['data004'];
-dataposition = '../../Data/';
+filename = 3;
+opAmp = [ "OP77", "AD8031", "LM741"];
+dataposition = '../../Data/data00';
 
-mediaposition = '../../Media/Notch/'
-medianame = strcat("PulsedOP77-", filename);
+mediaposition = '../../Media/Notch/';
+medianame = strcat("PulsedOP77-", string(filename));
 
 % importing data and manipulation to obtain transfer function
-rawdata = readmatrix(strcat(dataposition, filename, '.txt'));
+rawdata = readmatrix(strcat(dataposition, string(filename), '.txt'));
 
 
 
-flagSave = true;
+flagSave = false;
 confPlot = 3;
-flagp0 = false;
+flagp0 = true;
 thr = 1;
 
 
@@ -69,12 +70,12 @@ end
 %p0tf = [R, R2, L];
 
 
-R = 330; 
+R = 400;
 R2 = 100;
 C = 110e-9;
-L = 0.1;
+L = 0.020;
 
-p0tf = [C, L];
+p0tf = [R, L];
 
 
 
@@ -84,8 +85,9 @@ function y = H(params, f)
     w = 2 * pi * f;
     
     %G = (params(2) + 1i * w * params(3)) ./ ( params(1) + params(2) + 1i * w * params(3) );
-    R2 = 99.9;
-    y  = ( 1i * w * R2 - w.^2 * params(2) ) ./ ( 1/params(1) + 1i*w*R2 - w.^2 * params(2));
+    R2 = 97;
+%    y  = ( 1i * w * R2 - w.^2 * params(2) ) ./ ( 1/params(1) + 1i*w*R2 - w.^2 * params(2));    % NOTCH FILTER
+    y = (R2 + 1i * w * params(2)) ./ ( params(1) + R2 + 1i * w * params(2) );   % HIGH PASS FILTER
 end
 
 function y = tf(params, f)
@@ -103,7 +105,7 @@ end
 
 if confPlot == 3
     t = tiledlayout(2, 1, "TileSpacing","tight", "Padding","tight");
-    title(t, strcat('Compound fit - '), filename);
+    title(t, strcat('Compound fit - '), opAmp(filename));
 
 
 end
@@ -117,19 +119,21 @@ if confPlot >=2
     hold on
     if flagp0
         ff = logspace(0, 6, 100);
-        loglog(ff, tf(p0tf, ff));
+        loglog(ff, tf(p0tf, ff), 'Color', 'magenta');
 %        loglog(fv, tf(p0tf, ff), '--', Color = 'red');
     end
     grid on
     grid minor
-    title(strcat('Fourier transform of pulsed measurement ', filename));
+    title(strcat('Fourier transform of pulsed measurement'));
     ylabel('Amplitude [pure]');
     xlabel('Frequency [Hz]');
-    %ylim([0.05, 2]);
+    ylim([0.05, 2]);
     dim = [.15 .55 .3 .3];
     str = ['Threshold = ' sprintf('%.2f', thr) ];
     annotation('textbox',dim,'String',str,'FitBoxToText','on');
     hold off
+
+    legend('Data - fft', 'Bode Function from fit', 'Location', 'ne');
 
 end
 
@@ -142,9 +146,11 @@ if ~(confPlot == 2)
     plot(tt, vo, 'v', Color= 'red');
     grid on
     grid minor
-    title(strcat('Simple data plot - ', filename))
+    title(strcat('Simple data plot'))
     ylabel('Voltage [V]');
-    xlabel('Frequency [Hz]');
+    xlabel('Time [s]');
+
+    legend('Input signal', 'Output signal', 'Location', 'ne');
 
     hold off
 
