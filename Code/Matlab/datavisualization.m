@@ -1,6 +1,6 @@
 dataPosition = '../../Data/';
-filename = 'dataBode001';
-filename2 = 'dataBode003';
+filename = 'exp_mezzoperiodo_OP07';
+filename2 = 'simulation_exp_OP07';
 
 mediaposition = '../../Media/';
 medianame = 'AmplitudeOffsetIn';
