@@ -25,10 +25,10 @@ ph = rawData(:, 3);
 
 
 if flagdB
-    A = 10.^(A/20);
+    A = 10.^(A/20); %#ok<UNRCH>
 end
 if flagDeg
-    ph = ph.*pi/180;
+    ph = ph.*pi/180; %#ok<UNRCH>
 end
 if flagLimited
     A2 = A(1 : limit);
